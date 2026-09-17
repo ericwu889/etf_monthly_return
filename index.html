@@ -38,17 +38,25 @@ select{font:inherit;font-size:14px;color:var(--text-primary);background:transpar
 button:focus-visible,.tw-chip:focus-within{outline:2px solid var(--border-accent);outline-offset:2px}
 .tablewrap{overflow-x:auto}
 .sel-actions{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 10px}
-.sel-grp{grid-column:1/-1;font-size:12px;color:var(--text-secondary);margin:6px 0 0}
-.sel-chips{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:6px}
-.sel-chip{display:inline-flex;align-items:center;gap:6px;min-height:32px;padding:0 8px;border:0.5px solid var(--border);border-radius:var(--radius);font-size:13px;cursor:pointer;user-select:none}
-.sel-chip:has(input:not(:checked)){color:var(--text-secondary)}
+.sel-lab{font-size:13px;color:var(--text-secondary);margin:0 0 8px}
+.sel-scroll{border:0.5px solid var(--border);border-radius:var(--radius);overflow:auto;max-height:var(--sel-h,420px)}
+.sel-scroll thead th{position:sticky;top:0;background:var(--page);z-index:1}
+table.sizes .pick{width:26px;padding-right:0}
+table.sizes .pick input{margin:0;cursor:pointer}
+table.sizes tbody tr[data-ticker]{cursor:pointer}
+table.sizes tbody tr[data-ticker]:not(.on) td{color:var(--text-secondary)}
+table.sizes tbody tr.on{background:var(--bg-accent)}
+table.sizes tbody tr.nodata .last,table.sizes tbody tr.nodata .bw{color:var(--text-secondary)}
+.foot{border-top:1px solid var(--border);padding-top:20px;margin-top:32px}
 table{border-collapse:collapse;width:100%;font-size:14px}
 table.sizes{font-size:12.5px}
 table.sizes td,table.sizes th{padding:5px 8px}
-table.sizes .tk{font-weight:500;white-space:nowrap}
-table.sizes .nm{text-align:left;white-space:nowrap;max-width:32ch;overflow:hidden;text-overflow:ellipsis;color:var(--text-secondary)}
-table.sizes .num{text-align:right;white-space:nowrap}
-table.sizes .mo{color:var(--text-secondary)}
+table.sizes th,table.sizes td{text-align:left}
+table.sizes .tk{font-weight:500;white-space:nowrap;width:74px}
+table.sizes .nm{white-space:nowrap;max-width:30ch;overflow:hidden;text-overflow:ellipsis;color:var(--text-secondary)}
+table.sizes .last{white-space:nowrap;width:86px}
+table.sizes .bw{white-space:nowrap;width:104px}
+table.sizes .mo{color:var(--text-secondary);font-size:11px}
 table.sizes tr.grp td{font-weight:500;color:var(--text-primary);background:var(--bg-accent);padding:6px 8px}
 th,td{padding:8px 10px;border-bottom:1px solid var(--border);text-align:right;white-space:nowrap}
 th:first-child,td:first-child{text-align:left}
@@ -62,6 +70,13 @@ th{font-weight:500;color:var(--text-secondary)}
 <h1>U.S. and Canadian stocks and ETFs: returns by month, and what sitting in cash would have done</h1>
 <p class="lede">This page does two things with 42 U.S. and Canadian stocks and ETFs. First, it shows how each one performed month by month, so you can check whether a given month has tended to be good or bad. Second, it lets you pick one or more months to sit in cash every year, and compares that against simply holding the whole time.</p>
 <p class="note">Holdings: 30 U.S. listings (index, sector, bond, real estate and dividend ETFs, plus individual stocks) and 12 Canadian ETFs, grouped by market and listed alphabetically. Returns include dividends, reinvested. Only full months count, from each holding's first full month through August 2026.</p>
+<details class="sec" id="dr" open>
+<summary><h2 id="dr-sum">Date range</h2></summary>
+<div class="dr-slider" id="dr-slider"><div class="dr-track"></div><div class="dr-fill"></div>
+<div class="dr-thumb" id="dr-h0" role="slider" tabindex="0" aria-label="Start month"></div>
+<div class="dr-thumb" id="dr-h1" role="slider" tabindex="0" aria-label="End month"></div></div>
+<p class="note" style="margin:6px 0 0">Drag either handle, or use the arrow keys. Every section below uses this range.</p>
+</details>
 <details class="sec sel" id="sel">
 <summary><h2 id="sel-sum">Securities shown</h2></summary>
 <div class="sel-actions">
@@ -70,16 +85,19 @@ th{font-weight:500;color:var(--text-secondary)}
 <button type="button" data-pick="us">U.S. only</button>
 <button type="button" data-pick="ca">Canada only</button>
 </div>
-<div class="sel-chips" id="sel-chips"></div>
+<p class="sel-lab">Tick a row to show that holding in every section below.</p>
+<div class="tablewrap sel-scroll"><table class="sizes">
+<thead><tr><th></th><th>Ticker</th><th>Name</th><th>Last month</th><th>Best month</th><th>Worst month</th></tr></thead>
+<tbody>
+<tr class="grp" data-group="ca"><td colspan="6">Canada</td></tr>
+<tr data-ticker="CEW.TO" data-group="ca"><td class="pick"><input type="checkbox" value="CEW.TO" aria-label="Show CEW.TO"></td><td class="tk">CEW.TO</td><td class="nm">iShares Equal Weight Banc &amp; Lifeco ETF</td><td class="last">−3.81%</td><td class="bw">15.98% <span class="mo">Nov 2020</span></td><td class="bw">−19.16% <span class="mo">Mar 2020</span></td></tr><tr data-ticker="FCIV.TO" data-group="ca"><td class="pick"><input type="checkbox" value="FCIV.TO" aria-label="Show FCIV.TO"></td><td class="tk">FCIV.TO</td><td class="nm">Fidelity International Value ETF</td><td class="last">−1.27%</td><td class="bw">17.42% <span class="mo">Nov 2020</span></td><td class="bw">−9.02% <span class="mo">Jun 2022</span></td></tr><tr data-ticker="FCUV.TO" data-group="ca"><td class="pick"><input type="checkbox" value="FCUV.TO" aria-label="Show FCUV.TO"></td><td class="tk">FCUV.TO</td><td class="nm">Fidelity U.S. Value ETF</td><td class="last">−2.37%</td><td class="bw">11.50% <span class="mo">Oct 2022</span></td><td class="bw">−9.82% <span class="mo">Jun 2022</span></td></tr><tr data-ticker="FIE.TO" data-group="ca"><td class="pick"><input type="checkbox" value="FIE.TO" aria-label="Show FIE.TO"></td><td class="tk">FIE.TO</td><td class="nm">iShares Canadian Financial Monthly Income ETF</td><td class="last">−2.62%</td><td class="bw">12.84% <span class="mo">Nov 2020</span></td><td class="bw">−20.30% <span class="mo">Mar 2020</span></td></tr><tr data-ticker="QQC.TO" data-group="ca"><td class="pick"><input type="checkbox" value="QQC.TO" aria-label="Show QQC.TO"></td><td class="tk">QQC.TO</td><td class="nm">CI Invesco NASDAQ 100 Index ETF</td><td class="last">3.08%</td><td class="bw">12.92% <span class="mo">Apr 2026</span></td><td class="bw">−11.16% <span class="mo">Apr 2022</span></td></tr><tr data-ticker="VDY.TO" data-group="ca"><td class="pick"><input type="checkbox" value="VDY.TO" aria-label="Show VDY.TO"></td><td class="tk">VDY.TO</td><td class="nm">Vanguard FTSE Canadian High Dividend Yield Index ETF</td><td class="last">−2.16%</td><td class="bw">15.35% <span class="mo">Nov 2020</span></td><td class="bw">−16.40% <span class="mo">Mar 2020</span></td></tr><tr data-ticker="VFV.TO" data-group="ca"><td class="pick"><input type="checkbox" value="VFV.TO" aria-label="Show VFV.TO"></td><td class="tk">VFV.TO</td><td class="nm">Vanguard S&amp;P 500 Index ETF</td><td class="last">1.54%</td><td class="bw">11.81% <span class="mo">Apr 2020</span></td><td class="bw">−8.70% <span class="mo">Mar 2020</span></td></tr><tr data-ticker="VIDY.TO" data-group="ca"><td class="pick"><input type="checkbox" value="VIDY.TO" aria-label="Show VIDY.TO"></td><td class="tk">VIDY.TO</td><td class="nm">Vanguard FTSE Developed ex North America High Dividend Yield Index ETF</td><td class="last">0.50%</td><td class="bw">14.98% <span class="mo">Nov 2020</span></td><td class="bw">−14.72% <span class="mo">Mar 2020</span></td></tr><tr data-ticker="XDIV.TO" data-group="ca"><td class="pick"><input type="checkbox" value="XDIV.TO" aria-label="Show XDIV.TO"></td><td class="tk">XDIV.TO</td><td class="nm">iShares Core MSCI Canadian Quality Dividend Index ETF</td><td class="last">−1.61%</td><td class="bw">11.14% <span class="mo">Nov 2020</span></td><td class="bw">−19.19% <span class="mo">Mar 2020</span></td></tr><tr data-ticker="XEI.TO" data-group="ca"><td class="pick"><input type="checkbox" value="XEI.TO" aria-label="Show XEI.TO"></td><td class="tk">XEI.TO</td><td class="nm">iShares Core S&amp;P/TSX Composite High Dividend Index ETF</td><td class="last">−1.62%</td><td class="bw">15.61% <span class="mo">Nov 2020</span></td><td class="bw">−23.56% <span class="mo">Mar 2020</span></td></tr><tr data-ticker="XFN.TO" data-group="ca"><td class="pick"><input type="checkbox" value="XFN.TO" aria-label="Show XFN.TO"></td><td class="tk">XFN.TO</td><td class="nm">iShares S&amp;P/TSX Capped Financials Index ETF</td><td class="last">−3.03%</td><td class="bw">16.59% <span class="mo">Nov 2020</span></td><td class="bw">−18.64% <span class="mo">Mar 2020</span></td></tr><tr data-ticker="XSP.TO" data-group="ca"><td class="pick"><input type="checkbox" value="XSP.TO" aria-label="Show XSP.TO"></td><td class="tk">XSP.TO</td><td class="nm">iShares Core S&amp;P 500 Index ETF (CAD-Hedged)</td><td class="last">2.62%</td><td class="bw">12.40% <span class="mo">Apr 2020</span></td><td class="bw">−13.65% <span class="mo">Mar 2020</span></td></tr>
+<tr class="grp" data-group="us"><td colspan="6">United States</td></tr>
+<tr data-ticker="AAPL" data-group="us"><td class="pick"><input type="checkbox" value="AAPL" aria-label="Show AAPL"></td><td class="tk">AAPL</td><td class="nm">Apple Inc.</td><td class="last">2.66%</td><td class="bw">21.66% <span class="mo">Aug 2020</span></td><td class="bw">−18.12% <span class="mo">Nov 2018</span></td></tr><tr data-ticker="CAT" data-group="us"><td class="pick"><input type="checkbox" value="CAT" aria-label="Show CAT"></td><td class="tk">CAT</td><td class="nm">Caterpillar Inc.</td><td class="last">−2.13%</td><td class="bw">32.76% <span class="mo">Oct 2022</span></td><td class="bw">−23.34% <span class="mo">Jul 2026</span></td></tr><tr data-ticker="DIA" data-group="us"><td class="pick"><input type="checkbox" value="DIA" aria-label="Show DIA"></td><td class="tk">DIA</td><td class="nm">SPDR Dow Jones Industrial Average ETF Trust</td><td class="last">1.47%</td><td class="bw">14.03% <span class="mo">Oct 2022</span></td><td class="bw">−13.61% <span class="mo">Mar 2020</span></td></tr><tr data-ticker="GLD" data-group="us"><td class="pick"><input type="checkbox" value="GLD" aria-label="Show GLD"></td><td class="tk">GLD</td><td class="nm">SPDR Gold Shares</td><td class="last">9.93%</td><td class="bw">12.27% <span class="mo">Jan 2026</span></td><td class="bw">−11.68% <span class="mo">Jun 2026</span></td></tr><tr data-ticker="GOOGL" data-group="us"><td class="pick"><input type="checkbox" value="GOOGL" aria-label="Show GOOGL"></td><td class="tk">GOOGL</td><td class="nm">Alphabet Inc.</td><td class="last">−4.71%</td><td class="bw">33.82% <span class="mo">Apr 2026</span></td><td class="bw">−17.95% <span class="mo">Apr 2022</span></td></tr><tr data-ticker="IEF" data-group="us"><td class="pick"><input type="checkbox" value="IEF" aria-label="Show IEF"></td><td class="tk">IEF</td><td class="nm">iShares 7-10 Year Treasury Bond ETF</td><td class="last">0.12%</td><td class="bw">4.55% <span class="mo">Nov 2023</span></td><td class="bw">−4.73% <span class="mo">Sep 2022</span></td></tr><tr data-ticker="IWM" data-group="us"><td class="pick"><input type="checkbox" value="IWM" aria-label="Show IWM"></td><td class="tk">IWM</td><td class="nm">iShares Russell 2000 ETF</td><td class="last">0.94%</td><td class="bw">18.24% <span class="mo">Nov 2020</span></td><td class="bw">−21.48% <span class="mo">Mar 2020</span></td></tr><tr data-ticker="IYR" data-group="us"><td class="pick"><input type="checkbox" value="IYR" aria-label="Show IYR"></td><td class="tk">IYR</td><td class="nm">iShares U.S. Real Estate ETF</td><td class="last">−2.34%</td><td class="bw">13.19% <span class="mo">Oct 2011</span></td><td class="bw">−19.67% <span class="mo">Mar 2020</span></td></tr><tr data-ticker="KRE" data-group="us"><td class="pick"><input type="checkbox" value="KRE" aria-label="Show KRE"></td><td class="tk">KRE</td><td class="nm">SPDR S&amp;P Regional Banking ETF</td><td class="last">−3.29%</td><td class="bw">21.49% <span class="mo">Oct 2011</span></td><td class="bw">−30.58% <span class="mo">Mar 2020</span></td></tr><tr data-ticker="LIN" data-group="us"><td class="pick"><input type="checkbox" value="LIN" aria-label="Show LIN"></td><td class="tk">LIN</td><td class="nm">Linde plc</td><td class="last">2.34%</td><td class="bw">16.37% <span class="mo">Nov 2020</span></td><td class="bw">−11.94% <span class="mo">Oct 2025</span></td></tr><tr data-ticker="LLY" data-group="us"><td class="pick"><input type="checkbox" value="LLY" aria-label="Show LLY"></td><td class="tk">LLY</td><td class="nm">Eli Lilly and Company</td><td class="last">0.83%</td><td class="bw">24.82% <span class="mo">Nov 2025</span></td><td class="bw">−17.78% <span class="mo">May 2025</span></td></tr><tr data-ticker="LQD" data-group="us"><td class="pick"><input type="checkbox" value="LQD" aria-label="Show LQD"></td><td class="tk">LQD</td><td class="nm">iShares iBoxx $ Investment Grade Corporate Bond ETF</td><td class="last">0.39%</td><td class="bw">7.57% <span class="mo">Nov 2023</span></td><td class="bw">−6.70% <span class="mo">Apr 2022</span></td></tr><tr data-ticker="MSFT" data-group="us"><td class="pick"><input type="checkbox" value="MSFT" aria-label="Show MSFT"></td><td class="tk">MSFT</td><td class="nm">Microsoft Corporation</td><td class="last">9.37%</td><td class="bw">24.58% <span class="mo">Jul 2026</span></td><td class="bw">−17.15% <span class="mo">Jun 2026</span></td></tr><tr data-ticker="NEE" data-group="us"><td class="pick"><input type="checkbox" value="NEE" aria-label="Show NEE"></td><td class="tk">NEE</td><td class="nm">NextEra Energy, Inc.</td><td class="last">−4.55%</td><td class="bw">19.49% <span class="mo">May 2024</span></td><td class="bw">−16.32% <span class="mo">Jan 2022</span></td></tr><tr data-ticker="NVDA" data-group="us"><td class="pick"><input type="checkbox" value="NVDA" aria-label="Show NVDA"></td><td class="tk">NVDA</td><td class="nm">NVIDIA Corporation</td><td class="last">9.98%</td><td class="bw">38.54% <span class="mo">May 2017</span></td><td class="bw">−32.03% <span class="mo">Apr 2022</span></td></tr><tr data-ticker="PLD" data-group="us"><td class="pick"><input type="checkbox" value="PLD" aria-label="Show PLD"></td><td class="tk">PLD</td><td class="nm">Prologis, Inc.</td><td class="last">−3.24%</td><td class="bw">22.72% <span class="mo">Oct 2011</span></td><td class="bw">−21.63% <span class="mo">Apr 2024</span></td></tr><tr data-ticker="QQQ" data-group="us"><td class="pick"><input type="checkbox" value="QQQ" aria-label="Show QQQ"></td><td class="tk">QQQ</td><td class="nm">Invesco QQQ Trust</td><td class="last">4.18%</td><td class="bw">15.69% <span class="mo">Apr 2026</span></td><td class="bw">−13.60% <span class="mo">Apr 2022</span></td></tr><tr data-ticker="RSP" data-group="us"><td class="pick"><input type="checkbox" value="RSP" aria-label="Show RSP"></td><td class="tk">RSP</td><td class="nm">Invesco S&amp;P 500 Equal Weight ETF</td><td class="last">2.04%</td><td class="bw">14.43% <span class="mo">Apr 2020</span></td><td class="bw">−17.97% <span class="mo">Mar 2020</span></td></tr><tr data-ticker="SCHD" data-group="us"><td class="pick"><input type="checkbox" value="SCHD" aria-label="Show SCHD"></td><td class="tk">SCHD</td><td class="nm">Schwab U.S. Dividend Equity ETF</td><td class="last">4.24%</td><td class="bw">13.17% <span class="mo">Nov 2020</span></td><td class="bw">−11.89% <span class="mo">Mar 2020</span></td></tr><tr data-ticker="SCHH" data-group="us"><td class="pick"><input type="checkbox" value="SCHH" aria-label="Show SCHH"></td><td class="tk">SCHH</td><td class="nm">Schwab U.S. REIT ETF</td><td class="last">−2.88%</td><td class="bw">14.70% <span class="mo">Oct 2011</span></td><td class="bw">−22.45% <span class="mo">Mar 2020</span></td></tr><tr data-ticker="SHY" data-group="us"><td class="pick"><input type="checkbox" value="SHY" aria-label="Show SHY"></td><td class="tk">SHY</td><td class="nm">iShares 1-3 Year Treasury Bond ETF</td><td class="last">0.17%</td><td class="bw">1.65% <span class="mo">Mar 2023</span></td><td class="bw">−1.40% <span class="mo">Mar 2022</span></td></tr><tr data-ticker="SPY" data-group="us"><td class="pick"><input type="checkbox" value="SPY" aria-label="Show SPY"></td><td class="tk">SPY</td><td class="nm">SPDR S&amp;P 500 ETF Trust</td><td class="last">2.68%</td><td class="bw">12.70% <span class="mo">Apr 2020</span></td><td class="bw">−12.46% <span class="mo">Mar 2020</span></td></tr><tr data-ticker="TLT" data-group="us"><td class="pick"><input type="checkbox" value="TLT" aria-label="Show TLT"></td><td class="tk">TLT</td><td class="nm">iShares 20+ Year Treasury Bond ETF</td><td class="last">0.73%</td><td class="bw">11.04% <span class="mo">Aug 2019</span></td><td class="bw">−9.42% <span class="mo">Apr 2022</span></td></tr><tr data-ticker="VIG" data-group="us"><td class="pick"><input type="checkbox" value="VIG" aria-label="Show VIG"></td><td class="tk">VIG</td><td class="nm">Vanguard Dividend Appreciation ETF</td><td class="last">1.21%</td><td class="bw">10.04% <span class="mo">Nov 2020</span></td><td class="bw">−9.62% <span class="mo">Mar 2020</span></td></tr><tr data-ticker="VNO" data-group="us"><td class="pick"><input type="checkbox" value="VNO" aria-label="Show VNO"></td><td class="tk">VNO</td><td class="nm">Vornado Realty Trust</td><td class="last">−5.10%</td><td class="bw">33.78% <span class="mo">Jun 2023</span></td><td class="bw">−32.42% <span class="mo">Mar 2020</span></td></tr><tr data-ticker="WMT" data-group="us"><td class="pick"><input type="checkbox" value="WMT" aria-label="Show WMT"></td><td class="tk">WMT</td><td class="nm">Walmart Inc.</td><td class="last">−5.47%</td><td class="bw">14.78% <span class="mo">Nov 2014</span></td><td class="bw">−15.61% <span class="mo">May 2022</span></td></tr><tr data-ticker="XLF" data-group="us"><td class="pick"><input type="checkbox" value="XLF" aria-label="Show XLF"></td><td class="tk">XLF</td><td class="nm">Financial Select Sector SPDR Fund</td><td class="last">1.35%</td><td class="bw">16.85% <span class="mo">Nov 2020</span></td><td class="bw">−20.99% <span class="mo">Mar 2020</span></td></tr><tr data-ticker="XLRE" data-group="us"><td class="pick"><input type="checkbox" value="XLRE" aria-label="Show XLRE"></td><td class="tk">XLRE</td><td class="nm">Real Estate Select Sector SPDR Fund</td><td class="last">−2.13%</td><td class="bw">12.48% <span class="mo">Nov 2023</span></td><td class="bw">−15.07% <span class="mo">Mar 2020</span></td></tr><tr data-ticker="XLU" data-group="us"><td class="pick"><input type="checkbox" value="XLU" aria-label="Show XLU"></td><td class="tk">XLU</td><td class="nm">Utilities Select Sector SPDR Fund</td><td class="last">−4.78%</td><td class="bw">10.55% <span class="mo">Mar 2021</span></td><td class="bw">−11.29% <span class="mo">Sep 2022</span></td></tr><tr data-ticker="XOM" data-group="us"><td class="pick"><input type="checkbox" value="XOM" aria-label="Show XOM"></td><td class="tk">XOM</td><td class="nm">Exxon Mobil Corporation</td><td class="last">4.21%</td><td class="bw">26.92% <span class="mo">Oct 2022</span></td><td class="bw">−26.19% <span class="mo">Mar 2020</span></td></tr>
+</tbody></table></div>
+<p class="note">Last, best and worst month follow the date range set above; hover any of them to see which month it was.</p>
 </details>
 <p class="note" id="sel-warn" role="status" style="color:var(--text-danger)"></p>
-<details class="sec" id="dr" open>
-<summary><h2 id="dr-sum">Date range</h2></summary>
-<div class="dr-slider" id="dr-slider"><div class="dr-track"></div><div class="dr-fill"></div>
-<div class="dr-thumb" id="dr-h0" role="slider" tabindex="0" aria-label="Start month"></div>
-<div class="dr-thumb" id="dr-h1" role="slider" tabindex="0" aria-label="End month"></div></div>
-<p class="note" style="margin:6px 0 0">Drag either handle, or use the arrow keys. Every section below uses this range.</p>
-</details>
+
 <script>
 (() => {
 const FIRST = 24141, LAST = 24319;
@@ -141,43 +159,48 @@ render();
 const ALL = ["AAPL", "CAT", "DIA", "GLD", "GOOGL", "IEF", "IWM", "IYR", "KRE", "LIN", "LLY", "LQD", "MSFT", "NEE", "NVDA", "PLD", "QQQ", "RSP", "SCHD", "SCHH", "SHY", "SPY", "TLT", "VIG", "VNO", "WMT", "XLF", "XLRE", "XLU", "XOM", "CEW.TO", "FCIV.TO", "FCUV.TO", "FIE.TO", "QQC.TO", "VDY.TO", "VFV.TO", "VIDY.TO", "XDIV.TO", "XEI.TO", "XFN.TO", "XSP.TO"];
 const START = ['AAPL', 'SPY', 'WMT'];
 window.SECFILTER = new Set(START.filter(t => ALL.includes(t)));
-const chips = document.getElementById('sel-chips'), sum = document.getElementById('sel-sum'), warn = document.getElementById('sel-warn');
-const boxes = {};
-let lastG = null;
-ALL.forEach(t => {
-  const g = t.endsWith('.TO') ? 'Canada' : 'United States';
-  if (g !== lastG) {
-    lastG = g;
-    const h = document.createElement('div'); h.className = 'sel-grp'; h.textContent = g; chips.appendChild(h);
-  }
-  const lab = document.createElement('label'); lab.className = 'sel-chip';
-  const cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = window.SECFILTER.has(t); cb.value = t;
-  cb.addEventListener('change', () => { cb.checked ? window.SECFILTER.add(t) : window.SECFILTER.delete(t); fire(); });
-  lab.append(cb, document.createTextNode(t));
-  chips.appendChild(lab); boxes[t] = cb;
+const boxes = [...document.querySelectorAll('.sel-scroll tbody input[type=checkbox]')];
+const sum = document.getElementById('sel-sum'), warn = document.getElementById('sel-warn');
+boxes.forEach(cb => {
+  cb.checked = window.SECFILTER.has(cb.value);
+  cb.addEventListener('change', () => {
+    cb.checked ? window.SECFILTER.add(cb.value) : window.SECFILTER.delete(cb.value);
+    fire();
+  });
 });
 function fire() {
   const n = window.SECFILTER.size;
   sum.textContent = n === ALL.length ? 'Securities shown: all ' + n : 'Securities shown: ' + n + ' of ' + ALL.length;
   warn.textContent = n ? '' : 'Nothing is selected, so the sections below are empty.';
-  document.querySelectorAll('table.sizes tbody tr[data-ticker]').forEach(tr => {
-    tr.hidden = !window.SECFILTER.has(tr.dataset.ticker);
-  });
-  document.querySelectorAll('table.sizes tbody tr.grp').forEach(tr => {
-    tr.hidden = ![...document.querySelectorAll('table.sizes tbody tr[data-group="' + tr.dataset.group + '"]')]
-      .some(r => window.SECFILTER.has(r.dataset.ticker));
+  document.querySelectorAll('.sel-scroll tbody tr[data-ticker]').forEach(tr => {
+    tr.classList.toggle('on', window.SECFILTER.has(tr.dataset.ticker));
   });
   window.dispatchEvent(new CustomEvent('secfilter'));
 }
 document.querySelectorAll('.sel-actions button').forEach(b => b.addEventListener('click', () => {
   const pick = b.dataset.pick;
-  ALL.forEach(t => {
+  boxes.forEach(cb => {
+    const t = cb.value;
     const on = pick === 'all' ? true : pick === 'none' ? false : pick === 'us' ? !t.endsWith('.TO') : t.endsWith('.TO');
-    boxes[t].checked = on;
+    cb.checked = on;
     on ? window.SECFILTER.add(t) : window.SECFILTER.delete(t);
   });
   fire();
 }));
+document.querySelectorAll('.sel-scroll tbody tr[data-ticker]').forEach(tr => {
+  tr.addEventListener('click', e => {
+    if (e.target.tagName === 'INPUT') return;
+    const cb = tr.querySelector('input');
+    cb.checked = !cb.checked;
+    cb.dispatchEvent(new Event('change'));
+  });
+});
+const scroll = document.querySelector('.sel-scroll');
+requestAnimationFrame(() => {
+  const head = scroll.querySelector('thead').getBoundingClientRect().height;
+  const row = scroll.querySelector('tbody tr[data-ticker]').getBoundingClientRect().height;
+  scroll.style.setProperty('--sel-h', Math.round(head + row * 13) + 'px');
+});
 fire();
 })();
 </script>
@@ -226,6 +249,7 @@ const COL = k => dark ? 'hsl(' + hue(k) + ',62%,62%)' : 'hsl(' + hue(k) + ',60%,
 const FADE = k => dark ? 'hsla(' + hue(k) + ',62%,62%,0.42)' : 'hsla(' + hue(k) + ',60%,42%,0.42)';
 const TICK = '#898781', GRID = dark ? '#2c2c2a' : '#e1e0d9';
 const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+window.__RETURNS = D;
 const T = Object.keys(D);
 const abs = s => { const p = s.split('-'); return +p[0] * 12 + (+p[1] - 1); };
 const nice = a => MON[((a % 12) + 12) % 12] + ' ' + Math.floor(a / 12);
@@ -396,7 +420,7 @@ draw();
 
 <details class="sec">
 <summary><h2>Returns by calendar month</h2></summary>
-<p class="intro" style="font-size:16px;line-height:1.6;color:var(--text-secondary);margin:0 0 16px">One bar per calendar month, January through December, so you can see whether a month has tended to help or hurt. Expected ROI is what a typical single January looked like; compound ROI chains every January in the range together. Average, median, worst and best read straight off that month's returns. Volatility is how much they varied, so it is never negative and is drawn in grey. Green bars gained, red bars lost. Dividends are included.</p>
+<p class="intro" style="font-size:16px;line-height:1.6;color:var(--text-secondary);margin:0 0 16px">One bar per calendar month, January through December. Each bar is built only from that month: the January bar uses every January in the date range, the February bar every February, and so on. Expected ROI is what one of those months typically looked like. Compound ROI chains them together, as if you held only that month each year. Average, median, worst and best read straight off that month's returns. Volatility is how much they varied, so it is never negative and is drawn in grey. Green bars gained, red bars lost. Dividends are included.</p>
 <style>
 .mc-g{margin:0 0 14px}
 .mc-l{display:block;font-size:13px;color:var(--text-secondary);margin:0 0 6px}
@@ -778,24 +802,54 @@ draw();
 </script>
 </details>
 
-<details class="sec">
-<summary><h2>Summary numbers</h2></summary>
-<div class="tablewrap"><table class="sizes">
-<thead><tr><th>Ticker</th><th>Name</th><th>Size</th><th>Best month</th><th>Worst month</th></tr></thead>
-<tbody>
-<tr class="grp" data-group="us"><td colspan="5">United States</td></tr>
-<tr data-ticker="AAPL" data-group="us"><td class="tk">AAPL</td><td class="nm">Apple Inc.</td><td class="num">US$4.7T</td><td class="num">21.66% <span class="mo">Aug 2020</span></td><td class="num">−18.12% <span class="mo">Nov 2018</span></td></tr><tr data-ticker="CAT" data-group="us"><td class="tk">CAT</td><td class="nm">Caterpillar Inc.</td><td class="num">US$375B</td><td class="num">32.76% <span class="mo">Oct 2022</span></td><td class="num">−23.34% <span class="mo">Jul 2026</span></td></tr><tr data-ticker="DIA" data-group="us"><td class="tk">DIA</td><td class="nm">SPDR Dow Jones Industrial Average ETF Trust</td><td class="num">US$45B</td><td class="num">14.03% <span class="mo">Oct 2022</span></td><td class="num">−13.61% <span class="mo">Mar 2020</span></td></tr><tr data-ticker="GLD" data-group="us"><td class="tk">GLD</td><td class="nm">SPDR Gold Shares</td><td class="num">US$149B</td><td class="num">12.27% <span class="mo">Jan 2026</span></td><td class="num">−11.68% <span class="mo">Jun 2026</span></td></tr><tr data-ticker="GOOGL" data-group="us"><td class="tk">GOOGL</td><td class="nm">Alphabet Inc.</td><td class="num">US$4.1T</td><td class="num">33.82% <span class="mo">Apr 2026</span></td><td class="num">−17.95% <span class="mo">Apr 2022</span></td></tr><tr data-ticker="IEF" data-group="us"><td class="tk">IEF</td><td class="nm">iShares 7-10 Year Treasury Bond ETF</td><td class="num">US$42B</td><td class="num">4.55% <span class="mo">Nov 2023</span></td><td class="num">−4.73% <span class="mo">Sep 2022</span></td></tr><tr data-ticker="IWM" data-group="us"><td class="tk">IWM</td><td class="nm">iShares Russell 2000 ETF</td><td class="num">US$83B</td><td class="num">18.24% <span class="mo">Nov 2020</span></td><td class="num">−21.48% <span class="mo">Mar 2020</span></td></tr><tr data-ticker="IYR" data-group="us"><td class="tk">IYR</td><td class="nm">iShares U.S. Real Estate ETF</td><td class="num">US$4.5B</td><td class="num">13.19% <span class="mo">Oct 2011</span></td><td class="num">−19.67% <span class="mo">Mar 2020</span></td></tr><tr data-ticker="KRE" data-group="us"><td class="tk">KRE</td><td class="nm">SPDR S&amp;P Regional Banking ETF</td><td class="num">US$4.1B</td><td class="num">21.49% <span class="mo">Oct 2011</span></td><td class="num">−30.58% <span class="mo">Mar 2020</span></td></tr><tr data-ticker="LIN" data-group="us"><td class="tk">LIN</td><td class="nm">Linde plc</td><td class="num">US$214B</td><td class="num">16.37% <span class="mo">Nov 2020</span></td><td class="num">−11.94% <span class="mo">Oct 2025</span></td></tr><tr data-ticker="LLY" data-group="us"><td class="tk">LLY</td><td class="nm">Eli Lilly and Company</td><td class="num">US$1.06T</td><td class="num">24.82% <span class="mo">Nov 2025</span></td><td class="num">−17.78% <span class="mo">May 2025</span></td></tr><tr data-ticker="LQD" data-group="us"><td class="tk">LQD</td><td class="nm">iShares iBoxx $ Investment Grade Corporate Bond ETF</td><td class="num">US$32B*</td><td class="num">7.57% <span class="mo">Nov 2023</span></td><td class="num">−6.70% <span class="mo">Apr 2022</span></td></tr><tr data-ticker="MSFT" data-group="us"><td class="tk">MSFT</td><td class="nm">Microsoft Corporation</td><td class="num">US$3.7T</td><td class="num">24.58% <span class="mo">Jul 2026</span></td><td class="num">−17.15% <span class="mo">Jun 2026</span></td></tr><tr data-ticker="NEE" data-group="us"><td class="tk">NEE</td><td class="nm">NextEra Energy, Inc.</td><td class="num">US$172B</td><td class="num">19.49% <span class="mo">May 2024</span></td><td class="num">−16.32% <span class="mo">Jan 2022</span></td></tr><tr data-ticker="NVDA" data-group="us"><td class="tk">NVDA</td><td class="nm">NVIDIA Corporation</td><td class="num">US$5.3T</td><td class="num">38.54% <span class="mo">May 2017</span></td><td class="num">−32.03% <span class="mo">Apr 2022</span></td></tr><tr data-ticker="PLD" data-group="us"><td class="tk">PLD</td><td class="nm">Prologis, Inc.</td><td class="num">US$131B</td><td class="num">22.72% <span class="mo">Oct 2011</span></td><td class="num">−21.63% <span class="mo">Apr 2024</span></td></tr><tr data-ticker="QQQ" data-group="us"><td class="tk">QQQ</td><td class="nm">Invesco QQQ Trust</td><td class="num">US$489B</td><td class="num">15.69% <span class="mo">Apr 2026</span></td><td class="num">−13.60% <span class="mo">Apr 2022</span></td></tr><tr data-ticker="RSP" data-group="us"><td class="tk">RSP</td><td class="nm">Invesco S&amp;P 500 Equal Weight ETF</td><td class="num">US$99B</td><td class="num">14.43% <span class="mo">Apr 2020</span></td><td class="num">−17.97% <span class="mo">Mar 2020</span></td></tr><tr data-ticker="SCHD" data-group="us"><td class="tk">SCHD</td><td class="nm">Schwab U.S. Dividend Equity ETF</td><td class="num">US$111B</td><td class="num">13.17% <span class="mo">Nov 2020</span></td><td class="num">−11.89% <span class="mo">Mar 2020</span></td></tr><tr data-ticker="SCHH" data-group="us"><td class="tk">SCHH</td><td class="nm">Schwab U.S. REIT ETF</td><td class="num">US$11B</td><td class="num">14.70% <span class="mo">Oct 2011</span></td><td class="num">−22.45% <span class="mo">Mar 2020</span></td></tr><tr data-ticker="SHY" data-group="us"><td class="tk">SHY</td><td class="nm">iShares 1-3 Year Treasury Bond ETF</td><td class="num">US$26B</td><td class="num">1.65% <span class="mo">Mar 2023</span></td><td class="num">−1.40% <span class="mo">Mar 2022</span></td></tr><tr data-ticker="SPY" data-group="us"><td class="tk">SPY</td><td class="nm">SPDR S&amp;P 500 ETF Trust</td><td class="num">US$824B</td><td class="num">12.70% <span class="mo">Apr 2020</span></td><td class="num">−12.46% <span class="mo">Mar 2020</span></td></tr><tr data-ticker="TLT" data-group="us"><td class="tk">TLT</td><td class="nm">iShares 20+ Year Treasury Bond ETF</td><td class="num">US$48B</td><td class="num">11.04% <span class="mo">Aug 2019</span></td><td class="num">−9.42% <span class="mo">Apr 2022</span></td></tr><tr data-ticker="VIG" data-group="us"><td class="tk">VIG</td><td class="nm">Vanguard Dividend Appreciation ETF</td><td class="num">US$111B</td><td class="num">10.04% <span class="mo">Nov 2020</span></td><td class="num">−9.62% <span class="mo">Mar 2020</span></td></tr><tr data-ticker="VNO" data-group="us"><td class="tk">VNO</td><td class="nm">Vornado Realty Trust</td><td class="num">US$7.0B</td><td class="num">33.78% <span class="mo">Jun 2023</span></td><td class="num">−32.42% <span class="mo">Mar 2020</span></td></tr><tr data-ticker="WMT" data-group="us"><td class="tk">WMT</td><td class="nm">Walmart Inc.</td><td class="num">US$840B</td><td class="num">14.78% <span class="mo">Nov 2014</span></td><td class="num">−15.61% <span class="mo">May 2022</span></td></tr><tr data-ticker="XLF" data-group="us"><td class="tk">XLF</td><td class="nm">Financial Select Sector SPDR Fund</td><td class="num">US$54B</td><td class="num">16.85% <span class="mo">Nov 2020</span></td><td class="num">−20.99% <span class="mo">Mar 2020</span></td></tr><tr data-ticker="XLRE" data-group="us"><td class="tk">XLRE</td><td class="nm">Real Estate Select Sector SPDR Fund</td><td class="num">US$8.2B</td><td class="num">12.48% <span class="mo">Nov 2023</span></td><td class="num">−15.07% <span class="mo">Mar 2020</span></td></tr><tr data-ticker="XLU" data-group="us"><td class="tk">XLU</td><td class="nm">Utilities Select Sector SPDR Fund</td><td class="num">US$22B</td><td class="num">10.55% <span class="mo">Mar 2021</span></td><td class="num">−11.29% <span class="mo">Sep 2022</span></td></tr><tr data-ticker="XOM" data-group="us"><td class="tk">XOM</td><td class="nm">Exxon Mobil Corporation</td><td class="num">US$650B</td><td class="num">26.92% <span class="mo">Oct 2022</span></td><td class="num">−26.19% <span class="mo">Mar 2020</span></td></tr>
-<tr class="grp" data-group="ca"><td colspan="5">Canada</td></tr>
-<tr data-ticker="CEW.TO" data-group="ca"><td class="tk">CEW.TO</td><td class="nm">iShares Equal Weight Banc &amp; Lifeco ETF</td><td class="num">C$334M</td><td class="num">15.98% <span class="mo">Nov 2020</span></td><td class="num">−19.16% <span class="mo">Mar 2020</span></td></tr><tr data-ticker="FCIV.TO" data-group="ca"><td class="tk">FCIV.TO</td><td class="nm">Fidelity International Value ETF</td><td class="num">C$2.2B</td><td class="num">17.42% <span class="mo">Nov 2020</span></td><td class="num">−9.02% <span class="mo">Jun 2022</span></td></tr><tr data-ticker="FCUV.TO" data-group="ca"><td class="tk">FCUV.TO</td><td class="nm">Fidelity U.S. Value ETF</td><td class="num">C$4.2B</td><td class="num">11.50% <span class="mo">Oct 2022</span></td><td class="num">−9.82% <span class="mo">Jun 2022</span></td></tr><tr data-ticker="FIE.TO" data-group="ca"><td class="tk">FIE.TO</td><td class="nm">iShares Canadian Financial Monthly Income ETF</td><td class="num">C$1.4B</td><td class="num">12.84% <span class="mo">Nov 2020</span></td><td class="num">−20.30% <span class="mo">Mar 2020</span></td></tr><tr data-ticker="QQC.TO" data-group="ca"><td class="tk">QQC.TO</td><td class="nm">CI Invesco NASDAQ 100 Index ETF</td><td class="num">C$3.8B</td><td class="num">12.92% <span class="mo">Apr 2026</span></td><td class="num">−11.16% <span class="mo">Apr 2022</span></td></tr><tr data-ticker="VDY.TO" data-group="ca"><td class="tk">VDY.TO</td><td class="nm">Vanguard FTSE Canadian High Dividend Yield Index ETF</td><td class="num">C$9.1B</td><td class="num">15.35% <span class="mo">Nov 2020</span></td><td class="num">−16.40% <span class="mo">Mar 2020</span></td></tr><tr data-ticker="VFV.TO" data-group="ca"><td class="tk">VFV.TO</td><td class="nm">Vanguard S&amp;P 500 Index ETF</td><td class="num">C$34B</td><td class="num">11.81% <span class="mo">Apr 2020</span></td><td class="num">−8.70% <span class="mo">Mar 2020</span></td></tr><tr data-ticker="VIDY.TO" data-group="ca"><td class="tk">VIDY.TO</td><td class="nm">Vanguard FTSE Developed ex North America High Dividend Yield Index ETF</td><td class="num">—</td><td class="num">14.98% <span class="mo">Nov 2020</span></td><td class="num">−14.72% <span class="mo">Mar 2020</span></td></tr><tr data-ticker="XDIV.TO" data-group="ca"><td class="tk">XDIV.TO</td><td class="nm">iShares Core MSCI Canadian Quality Dividend Index ETF</td><td class="num">C$6.1B</td><td class="num">11.14% <span class="mo">Nov 2020</span></td><td class="num">−19.19% <span class="mo">Mar 2020</span></td></tr><tr data-ticker="XEI.TO" data-group="ca"><td class="tk">XEI.TO</td><td class="nm">iShares Core S&amp;P/TSX Composite High Dividend Index ETF</td><td class="num">C$4.3B</td><td class="num">15.61% <span class="mo">Nov 2020</span></td><td class="num">−23.56% <span class="mo">Mar 2020</span></td></tr><tr data-ticker="XFN.TO" data-group="ca"><td class="tk">XFN.TO</td><td class="nm">iShares S&amp;P/TSX Capped Financials Index ETF</td><td class="num">C$2.3B</td><td class="num">16.59% <span class="mo">Nov 2020</span></td><td class="num">−18.64% <span class="mo">Mar 2020</span></td></tr><tr data-ticker="XSP.TO" data-group="ca"><td class="tk">XSP.TO</td><td class="nm">iShares Core S&amp;P 500 Index ETF (CAD-Hedged)</td><td class="num">C$16B</td><td class="num">12.40% <span class="mo">Apr 2020</span></td><td class="num">−13.65% <span class="mo">Mar 2020</span></td></tr>
-</tbody></table></div>
-<p class="note">Size is market value of the company for individual stocks, and fund assets for ETFs, gathered from public sources in September 2026. U.S. figures are in U.S. dollars, Canadian figures in Canadian dollars. These come from outside the price file, are approximate, and go stale; the return columns come from the price data itself. *LQD's figure is from March 2026. VIDY's fund size could not be confirmed. Best and worst month cover each holding's full history in the data.</p>
-<p style="margin:20px 0 8px"><button type="button" id="csv">Download monthly data as CSV</button></p>
-<p class="note">The CSV has one row per fund per month, with that month's total return.</p>
+<div class="foot">
+<p style="margin:0 0 8px"><button type="button" id="csv">Download monthly data as CSV</button></p>
+<p class="note">The CSV has one row per holding per month, with that month's total return, for all 42 regardless of what is ticked above.</p>
 <p class="note">Data fix: three days show a fund dropping several percent while everything else in its market barely moved, and each of those days is marked as a unit consolidation of matching size. They are not real losses, so they are removed from these numbers: XSP.TO on December 30, 2021, and FCUV.TO and FCIV.TO on December 29, 2025.</p>
-</details>
+</div>
 </main>
 <script>
 (() => {
+  const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const ab = s => { const p = s.split('-'); return +p[0] * 12 + (+p[1] - 1); };
+  const nice = a => MON[((a % 12) + 12) % 12] + ' ' + Math.floor(a / 12);
+  const pct = v => (v < -0.00005 ? '−' : '') + Math.abs(v).toFixed(2) + '%';
+  const rows = [...document.querySelectorAll('.sel-scroll tbody tr[data-ticker]')];
+  function updateTable() {
+    const D = window.__RETURNS, R = window.DATERANGE;
+    if (!D || !R) return;
+    rows.forEach(tr => {
+      const s = D[tr.dataset.ticker];
+      const off = ab(s.start);
+      let last = null, lastM = null, bi = null, wi = null;
+      for (let i = 0; i < s.r.length; i++) {
+        const m = off + i;
+        if (m < R.a || m > R.b) continue;
+        last = s.r[i]; lastM = m;
+        if (bi === null || s.r[i] > s.r[bi]) bi = i;
+        if (wi === null || s.r[i] < s.r[wi]) wi = i;
+      }
+      const cells = tr.querySelectorAll('.bw');
+      const lastCell = tr.querySelector('.last');
+      if (last === null) {
+        lastCell.textContent = '—'; lastCell.title = 'No months in this date range';
+        cells.forEach(c => { c.textContent = '—'; c.title = 'No months in this date range'; });
+        tr.classList.add('nodata');
+        return;
+      }
+      tr.classList.remove('nodata');
+      lastCell.textContent = pct(last); lastCell.title = nice(lastM);
+      const fill = (cell, i) => {
+        cell.textContent = '';
+        cell.append(document.createTextNode(pct(s.r[i]) + ' '));
+        const sp = document.createElement('span'); sp.className = 'mo'; sp.textContent = nice(off + i);
+        cell.appendChild(sp); cell.title = '';
+      };
+      fill(cells[0], bi); fill(cells[1], wi);
+    });
+  }
+  window.addEventListener('daterange', updateTable);
+  updateTable();
   const refresh = () => requestAnimationFrame(() => {
     if (!window.Chart) return;
     Object.values(Chart.instances).forEach(c => { if (c.canvas.offsetParent !== null) c.resize(); });
